@@ -27,7 +27,7 @@
         );
       },
       wsLink,
-      httpLink
+      httpLink,
     );
     return new ApolloClient({
       link,
