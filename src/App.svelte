@@ -9,11 +9,11 @@
 
   function createApolloClient() {
     const httpLink = new HttpLink({
-      uri: "https://web-labs-35-2.herokuapp.com/v1/graphql",
+      uri: "https://web-labs-kpi.herokuapp.com/v1/graphql",
     });
     const cache = new InMemoryCache();
     const wsLink = new WebSocketLink({
-      uri: "wss://web-labs-35-2.herokuapp.com/v1/graphql",
+      uri: "wss://web-labs-kpi.herokuapp.com/v1/graphql",
       options: {
         reconnect: true,
       },
