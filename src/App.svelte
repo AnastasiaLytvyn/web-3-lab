@@ -6,14 +6,22 @@
   import { setClient, subscribe } from "svelte-apollo";
   import { WebSocketLink } from "@apollo/client/link/ws";
   import { getMainDefinition } from "@apollo/client/utilities";
+  import { writable } from "svelte/store";
 
+  const isOnline = writable(true);
+  window.onoffline = () => {
+    isOnline.set(false);
+  };
+  window.ononline = () => {
+    isOnline.set(true);
+  };
   function createApolloClient() {
     const httpLink = new HttpLink({
-      uri: "https://web-labs-kpi.herokuapp.com/v1/graphql",
+      uri: HTTP_URL,
     });
     const cache = new InMemoryCache();
     const wsLink = new WebSocketLink({
-      uri: "wss://web-labs-kpi.herokuapp.com/v1/graphql",
+      uri: WEBSOCKET_URL,
       options: {
         reconnect: true,
       },
@@ -44,31 +52,31 @@
     await http.startExecuteMyMutation(OperationDocsStore.addOne(name));
   };
 
-  const deleteTodo = async () => {
-    const name = prompt("which todo to delete?") || "";
-    if (name) {
-      await http.startExecuteMyMutation(OperationDocsStore.deleteByName(name));
-    }
+  const deleteTodo = async (id) => {
+    await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
   };
 </script>
 
 <main>
-  {#if $todos.loading}
-    <h1>Loading...</h1>
-  {:else if $todos.error}
-    <h1>{$todos.error}</h1>
-  {:else}
-    <button on:click={addTodo}>Add new todo</button>
-    <button on:click={deleteTodo}>Delete todo</button>
+  {#if $isOnline}
+    {#if $todos.loading}
+      <h1>Loading...</h1>
+    {:else if $todos.error}
+      <h1>{$todos.error}</h1>
+    {:else}
+      <button on:click={addTodo}>Add new todo</button>
 
-    {#each $todos.data.todo as todo}
-      <div>
-        <p>todo name: {todo.title}</p>
-        <p>user id: {todo.user_id}</p>
-        <hr />
-      </div>
-    {/each}
-  {/if}
+      {#each $todos.data.todo as todo}
+        <div>
+          <p>todo name: {todo.title}</p>
+          <p>user id: {todo.user_id}</p>
+          <button on:click={() => deleteTodo(todo.id)}>Delete todo</button>
+          <hr />
+        </div>
+      {/each}
+    {/if}
+  {:else}
+    <h1>You are offline, check your Internet Connection</h1>{/if}
 </main>
 
 <style>

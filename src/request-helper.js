@@ -1,6 +1,6 @@
 class RequestHelper {
   constructor() {
-    this.API_URL = "https://web-labs-kpi.herokuapp.com/v1/graphql";
+    this.API_URL = HTTP_URL;
   }
 
   async fetchGraphQL(operationsDoc, operationName, variables) {

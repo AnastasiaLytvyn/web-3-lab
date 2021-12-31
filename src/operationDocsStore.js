@@ -22,12 +22,15 @@ export default class OperationDocsStore {
     }`;
   }
 
-  static deleteByName(name) {
+  static deleteByName(id) {
     return `mutation MyMutation {
-      delete_todo(where: {title: {_eq: "${name}"}}) {
-        affected_rows
+      delete_todo_by_pk(id: "${id}") {
+        id
+        title
+        user_id
       }
-    }`;
+    }
+    `;
   }
 
   static subscribeToAll() {
