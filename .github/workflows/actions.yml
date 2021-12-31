@@ -21,8 +21,6 @@ jobs:
       - name: Install Eslint
         run: |
           npm ci
-          npm install eslint
-      - run: npm run build --if-present
       - name: Eslint working flow
         run: |
           npm run eslint:check
