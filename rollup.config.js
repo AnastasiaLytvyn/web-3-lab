@@ -48,6 +48,7 @@ export default {
     replace({
       HTTP_URL: JSON.stringify(process.env.HTTP_URL),
       WEBSOCKET_URL: JSON.stringify(process.env.WEBSOCKET_URL),
+      X_HASURA_ADMIN_SECRET: JSON.stringify(process.env.X_HASURA_ADMIN_SECRET),
     }),
     svelte({
       compilerOptions: {

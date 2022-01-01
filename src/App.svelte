@@ -16,14 +16,21 @@
     isOnline.set(true);
   };
   function createApolloClient() {
+    const headers = {
+      "x-hasura-admin-secret": X_HASURA_ADMIN_SECRET,
+    };
     const httpLink = new HttpLink({
       uri: HTTP_URL,
+      headers,
     });
     const cache = new InMemoryCache();
     const wsLink = new WebSocketLink({
       uri: WEBSOCKET_URL,
       options: {
         reconnect: true,
+        connectionParams: {
+          headers,
+        },
       },
     });
     const link = split(

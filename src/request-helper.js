@@ -11,6 +11,9 @@ class RequestHelper {
         variables: variables,
         operationName: operationName,
       }),
+      headers: {
+        "x-hasura-admin-secret": X_HASURA_ADMIN_SECRET,
+      },
     });
 
     return await result.json();
