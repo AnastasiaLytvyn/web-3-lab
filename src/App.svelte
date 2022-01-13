@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
   import http from "./request-helper";
   import OperationDocsStore from "./operationDocsStore";
   import { ApolloClient, InMemoryCache, HttpLink, split } from "@apollo/client";
@@ -8,12 +7,13 @@
   import { getMainDefinition } from "@apollo/client/utilities";
   import { writable } from "svelte/store";
 
-  const isOnline = writable(true);
+  export const userMsg = writable("");
+  let isOnline = true;
   window.onoffline = () => {
-    isOnline.set(false);
+    isOnline=false;
   };
   window.ononline = () => {
-    isOnline.set(true);
+    isOnline=true;
   };
   function createApolloClient() {
     const headers = {
@@ -60,12 +60,21 @@
   };
 
   const deleteTodo = async (id) => {
-    await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
+    try{
+      await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
+      $userMsg="Delete done";
+    }
+    catch(e){
+      $userMsg= `Error: ${e.message}`;;
+    }
   };
+
+
+
 </script>
 
 <main>
-  {#if $isOnline}
+  {#if isOnline}
     {#if $todos.loading}
       <h1>Loading...</h1>
     {:else if $todos.error}
