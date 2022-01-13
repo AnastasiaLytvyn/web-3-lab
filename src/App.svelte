@@ -61,6 +61,7 @@
       userMsg = null;
     } catch (err) {
       userMsg = `Error: ${err.message}`;
+      setTimeout(() => (userMsg = null), 5000);
     }
   };
 
@@ -71,6 +72,7 @@
       userMsg = null;
     } catch (err) {
       userMsg = `Error: ${err.message}`;
+      setTimeout(() => (userMsg = null), 5000);
     }
   };
 </script>
