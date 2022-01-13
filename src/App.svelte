@@ -56,15 +56,19 @@
 
   const addTodo = async () => {
     const name = prompt("name") || "";
-    await http.startExecuteMyMutation(OperationDocsStore.addOne(name));
+    try {
+      await http.startExecuteMyMutation(OperationDocsStore.addOne(name));
+    } catch (err) {
+      $userMsg = `Error: ${err.message}`;
+    }
   };
 
   const deleteTodo = async (id) => {
     try {
       await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
       $userMsg = "Delete done";
-    } catch (e) {
-      $userMsg = `Error: ${e.message}`;
+    } catch (err) {
+      $userMsg = `Error: ${err.message}`;
     }
   };
 </script>
@@ -77,7 +81,7 @@
       <h1>{$todos.error}</h1>
     {:else}
       <button on:click={addTodo}>Add new todo</button>
-
+      <div>{$userMsg}</div>
       {#each $todos.data.todo as todo}
         <div>
           <p>todo name: {todo.title}</p>
