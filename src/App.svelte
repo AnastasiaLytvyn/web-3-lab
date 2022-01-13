@@ -82,7 +82,7 @@
     {:else if $todos.error}
       <h1>{$todos.error}</h1>
     {:else}
-      <button on:click={addTodo} class="button">Add new todo</button>
+      <button on:click={addTodo}>Add new todo</button>
       {#if userMsg}
         <div>{userMsg}</div>
       {/if}
@@ -90,9 +90,7 @@
         <div>
           <p>todo name: {todo.title}</p>
           <p>user id: {todo.user_id}</p>
-          <button on:click={() => deleteTodo(todo.id)} class="button"
-            >Delete todo</button
-          >
+          <button on:click={() => deleteTodo(todo.id)}>Delete todo</button>
           <hr />
         </div>
       {/each}
