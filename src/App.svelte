@@ -70,6 +70,7 @@
     } catch (err) {
       $userMsg = `Error: ${err.message}`;
     }
+    setTimeout(() => ($userMsg = null), 5000);
   };
 </script>
 
