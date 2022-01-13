@@ -10,10 +10,10 @@
   export const userMsg = writable("");
   let isOnline = true;
   window.onoffline = () => {
-    isOnline=false;
+    isOnline = false;
   };
   window.ononline = () => {
-    isOnline=true;
+    isOnline = true;
   };
   function createApolloClient() {
     const headers = {
@@ -60,17 +60,13 @@
   };
 
   const deleteTodo = async (id) => {
-    try{
+    try {
       await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
-      $userMsg="Delete done";
-    }
-    catch(e){
-      $userMsg= `Error: ${e.message}`;;
+      $userMsg = "Delete done";
+    } catch (e) {
+      $userMsg = `Error: ${e.message}`;
     }
   };
-
-
-
 </script>
 
 <main>
