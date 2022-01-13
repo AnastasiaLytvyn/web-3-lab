@@ -56,7 +56,9 @@
   const addTodo = async () => {
     const name = prompt("name") || "";
     try {
+      userMsg = "Adding...";
       await http.startExecuteMyMutation(OperationDocsStore.addOne(name));
+      userMsg = null;
     } catch (err) {
       userMsg = `Error: ${err.message}`;
     }
@@ -64,13 +66,12 @@
 
   const deleteTodo = async (id) => {
     try {
+      userMsg = "Deleting...";
       await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
-
-      userMsg = "Delete done";
+      userMsg = null;
     } catch (err) {
       userMsg = `Error: ${err.message}`;
     }
-    setTimeout(() => (userMsg = ""), 5000);
   };
 </script>
 
@@ -81,13 +82,17 @@
     {:else if $todos.error}
       <h1>{$todos.error}</h1>
     {:else}
-      <button on:click={addTodo}>Add new todo</button>
-      <div>{userMsg}</div>
+      <button on:click={addTodo} class="button">Add new todo</button>
+      {#if userMsg}
+        <div>{userMsg}</div>
+      {/if}
       {#each $todos.data.todo as todo}
         <div>
           <p>todo name: {todo.title}</p>
           <p>user id: {todo.user_id}</p>
-          <button on:click={() => deleteTodo(todo.id)}>Delete todo</button>
+          <button on:click={() => deleteTodo(todo.id)} class="button"
+            >Delete todo</button
+          >
           <hr />
         </div>
       {/each}
@@ -97,8 +102,23 @@
 </main>
 
 <style>
+  :root {
+    --button-primary: #adb5bd;
+    --button-hover: #939aa1;
+  }
+
   main {
     margin: 0;
     padding: 0;
+  }
+
+  button {
+    cursor: pointer;
+    background-color: var(--button-primary);
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background-color: var(--button-hover);
   }
 </style>
