@@ -5,9 +5,8 @@
   import { setClient, subscribe } from "svelte-apollo";
   import { WebSocketLink } from "@apollo/client/link/ws";
   import { getMainDefinition } from "@apollo/client/utilities";
-  import { writable } from "svelte/store";
 
-  export const userMsg = writable("");
+  let userMsg = "";
   let isOnline = true;
   window.onoffline = () => {
     isOnline = false;
@@ -59,18 +58,19 @@
     try {
       await http.startExecuteMyMutation(OperationDocsStore.addOne(name));
     } catch (err) {
-      $userMsg = `Error: ${err.message}`;
+      userMsg = `Error: ${err.message}`;
     }
   };
 
   const deleteTodo = async (id) => {
     try {
       await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
-      $userMsg = "Delete done";
+
+      userMsg = "Delete done";
     } catch (err) {
-      $userMsg = `Error: ${err.message}`;
+      userMsg = `Error: ${err.message}`;
     }
-    setTimeout(() => ($userMsg = null), 5000);
+    setTimeout(() => (userMsg = ""), 5000);
   };
 </script>
 
@@ -82,7 +82,7 @@
       <h1>{$todos.error}</h1>
     {:else}
       <button on:click={addTodo}>Add new todo</button>
-      <div>{$userMsg}</div>
+      <div>{userMsg}</div>
       {#each $todos.data.todo as todo}
         <div>
           <p>todo name: {todo.title}</p>
