@@ -14,7 +14,10 @@
   // );
 
   // onDestroy(userMsgSubscription);
-
+  $: userMsg &&
+    setTimeout(() => {
+      $userMsg = "";
+    }, 500);
   let isOnline = true;
   window.onoffline = () => {
     isOnline = false;
@@ -68,6 +71,7 @@
 
   const deleteTodo = async (id) => {
     await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
+    setTimeout(() => userMsg.set(null), 500);
   };
 </script>
 

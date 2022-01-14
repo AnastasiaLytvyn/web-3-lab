@@ -19,35 +19,37 @@ class RequestHelper {
     }).then((result) => {
       return result.json();
     });
-  }
-
-  fetchMyQuery(operationsDoc) {
-    return this.fetchGraphQL(operationsDoc, "MyQuery", {});
-  }
-
-  async startFetchMyQuery(operationsDoc) {
-    const { errors, data } = await this.fetchMyQuery(operationsDoc);
-
-    if (errors) {
-      console.error(errors);
-    }
-
-    console.log(data);
-    return { errors, data };
+    // throw new Error();
   }
 
   executeMyMutation(operationsDoc) {
     return this.fetchGraphQL(operationsDoc, "MyMutation", {});
   }
 
+  concatenateErrors(errors) {
+    return errors.reduce(
+      (message, error) =>
+        `${message.length === 0 ? message : message + ", "}${error.message}`,
+      "",
+    );
+  }
+
   async startExecuteMyMutation(operationsDoc) {
-    userMsg.set("Waiting...");
-    const { errors, data } = await this.executeMyMutation(operationsDoc);
-    if (errors) {
-      userMsg.set(`Error: ${err.message}`);
+    try {
+      userMsg.set("Waiting...");
+
+      const { errors, data } = await this.executeMyMutation(operationsDoc);
+
+      if (errors) {
+        throw new Error(this.concatenateErrors(errors));
+      }
+
+      userMsg.set("Succesfully.");
+
+      return data;
+    } catch (error) {
+      userMsg.set(`Error: ${error.message || "unknown error."}`);
     }
-    setTimeout(() => userMsg.set(null), 5000);
-    return data;
   }
 }
 export default new RequestHelper();
