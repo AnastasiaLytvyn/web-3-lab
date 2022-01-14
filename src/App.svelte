@@ -5,8 +5,16 @@
   import { setClient, subscribe } from "svelte-apollo";
   import { WebSocketLink } from "@apollo/client/link/ws";
   import { getMainDefinition } from "@apollo/client/utilities";
+  import { onDestroy } from "svelte";
+  import { userMsg } from "./stores";
 
-  let userMsg = "";
+  // let userMsgContent = "";
+  // const userMsgSubscription = userMsg.subscribe(
+  //   (msg) => (userMsgContent = msg),
+  // );
+
+  // onDestroy(userMsgSubscription);
+
   let isOnline = true;
   window.onoffline = () => {
     isOnline = false;
@@ -55,25 +63,11 @@
 
   const addTodo = async () => {
     const name = prompt("name") || "";
-    try {
-      userMsg = "Adding...";
-      await http.startExecuteMyMutation(OperationDocsStore.addOne(name));
-      userMsg = null;
-    } catch (err) {
-      userMsg = `Error: ${err.message}`;
-      setTimeout(() => (userMsg = null), 5000);
-    }
+    await http.startExecuteMyMutation(OperationDocsStore.addOne(name));
   };
 
   const deleteTodo = async (id) => {
-    try {
-      userMsg = "Deleting...";
-      await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
-      userMsg = null;
-    } catch (err) {
-      userMsg = `Error: ${err.message}`;
-      setTimeout(() => (userMsg = null), 5000);
-    }
+    await http.startExecuteMyMutation(OperationDocsStore.deleteByName(id));
   };
 </script>
 
@@ -85,8 +79,8 @@
       <h1>{$todos.error}</h1>
     {:else}
       <button on:click={addTodo}>Add new todo</button>
-      {#if userMsg}
-        <div>{userMsg}</div>
+      {#if $userMsg}
+        <div>{$userMsg}</div>
       {/if}
       {#each $todos.data.todo as todo}
         <div>

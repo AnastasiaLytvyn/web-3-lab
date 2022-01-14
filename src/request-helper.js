@@ -1,3 +1,5 @@
+import { userMsg } from "./stores";
+
 class RequestHelper {
   constructor() {
     this.API_URL = HTTP_URL;
@@ -27,13 +29,11 @@ class RequestHelper {
     const { errors, data } = await this.fetchMyQuery(operationsDoc);
 
     if (errors) {
-      // handle those errors like a pro
       console.error(errors);
     }
 
-    // do something great with this precious data
     console.log(data);
-    return data;
+    return { errors, data };
   }
 
   executeMyMutation(operationsDoc) {
@@ -41,10 +41,12 @@ class RequestHelper {
   }
 
   async startExecuteMyMutation(operationsDoc) {
+    userMsg.set("Waiting...");
     const { errors, data } = await this.executeMyMutation(operationsDoc);
     if (errors) {
-      throw new Error(errors[0].message);
+      userMsg.set(`Error: ${err.message}`);
     }
+    setTimeout(() => userMsg.set(null), 5000);
     return data;
   }
 }
